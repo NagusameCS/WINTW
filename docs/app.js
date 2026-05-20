@@ -1,0 +1,412 @@
+// Flagle One-Shot Solver — client-side MLE template matching.
+//
+// Algorithm (mirrors flagle/mle_solver.py):
+//  - For opener=sz, we have a precomputed reveal mask per candidate (197 total).
+//  - Input screenshot → autocrop to non-bg bbox → resize to 400×267.
+//  - Detect bg color from canvas border (mode RGB).
+//  - For each candidate i, predicted pixel = mask[i] ? flag[i].rgb : bg.
+//  - Score = mean squared error vs the cropped input.
+//  - argmin → answer. Margin to runner-up = confidence.
+//
+// Flag PNGs are fetched lazily from flagcdn.com (cached by browser).
+
+const W = 400, H = 267, P = W * H;
+const OPENER = "sz";
+const FLAG_URL = (code) => `https://flagcdn.com/w320/${code}.png`;
+
+const $ = (id) => document.getElementById(id);
+
+let CODES = [];           // ["ad","ae",...]  length 197
+let COUNTRIES = {};       // {code: {name, region, subregion, official}}
+let MASKS = null;         // Uint8Array, length 197*P (unpacked bits, 0/1)
+let FLAG_RGB = [];        // Array of Uint8ClampedArray(P*4) RGBA per candidate
+let FLAGS_LOADED = 0;
+let SOLVE_ENABLED = false;
+
+// ---------- bootstrap ----------
+
+async function init() {
+  showLoading("Loading reveal-mask database (2.6 MB)…", 0);
+  const [codesRes, countriesRes, masksRes] = await Promise.all([
+    fetch("data/codes.json").then(r => r.json()),
+    fetch("data/countries.json").then(r => r.json()),
+    fetch("data/masks_sz.bin").then(r => r.arrayBuffer()),
+  ]);
+  CODES = codesRes;
+  COUNTRIES = countriesRes;
+  MASKS = unpackBits(new Uint8Array(masksRes), CODES.length * P);
+  showLoading("Fetching 197 flag images (cached after first load)…", 5);
+  FLAG_RGB = new Array(CODES.length);
+  let done = 0;
+  await Promise.all(CODES.map(async (code, i) => {
+    FLAG_RGB[i] = await loadFlag(code);
+    done++;
+    showLoading(`Loaded ${done}/${CODES.length} flags…`, 5 + 95 * done / CODES.length);
+  }));
+  FLAGS_LOADED = CODES.length;
+  SOLVE_ENABLED = true;
+  hideLoading();
+  setupDropzone();
+  setupPaste();
+}
+
+function unpackBits(packed, totalBits) {
+  const out = new Uint8Array(totalBits);
+  for (let i = 0; i < totalBits; i++) {
+    const byte = packed[i >> 3];
+    out[i] = (byte >> (7 - (i & 7))) & 1;
+  }
+  return out;
+}
+
+async function loadFlag(code) {
+  const img = await new Promise((resolve, reject) => {
+    const im = new Image();
+    im.crossOrigin = "anonymous";
+    im.onload = () => resolve(im);
+    im.onerror = () => reject(new Error(`Failed to load ${code}`));
+    im.src = FLAG_URL(code);
+  });
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const ctx = c.getContext("2d");
+  ctx.drawImage(img, 0, 0, W, H);
+  return ctx.getImageData(0, 0, W, H).data; // RGBA Uint8ClampedArray
+}
+
+// ---------- UI loading state ----------
+
+function showLoading(msg, pct) {
+  $("loading").classList.remove("hidden");
+  $("loading-msg").textContent = msg;
+  $("loading-bar").value = pct;
+}
+function hideLoading() { $("loading").classList.add("hidden"); }
+
+// ---------- input handlers ----------
+
+function setupDropzone() {
+  const z = $("drop-zone");
+  z.addEventListener("click", () => $("file").click());
+  $("file").addEventListener("change", e => {
+    if (e.target.files[0]) handleImageFile(e.target.files[0]);
+  });
+  ["dragenter", "dragover"].forEach(ev => z.addEventListener(ev, e => {
+    e.preventDefault(); z.classList.add("dragover");
+  }));
+  ["dragleave", "drop"].forEach(ev => z.addEventListener(ev, e => {
+    e.preventDefault(); z.classList.remove("dragover");
+  }));
+  z.addEventListener("drop", e => {
+    const f = e.dataTransfer.files[0];
+    if (f) handleImageFile(f);
+  });
+}
+
+function setupPaste() {
+  document.addEventListener("paste", e => {
+    for (const item of e.clipboardData.items) {
+      if (item.type.startsWith("image/")) {
+        handleImageFile(item.getAsFile());
+        e.preventDefault();
+        return;
+      }
+    }
+  });
+}
+
+async function handleImageFile(file) {
+  if (!SOLVE_ENABLED) { alert("Database still loading…"); return; }
+  const img = await new Promise((resolve, reject) => {
+    const im = new Image();
+    im.onload = () => resolve(im);
+    im.onerror = reject;
+    im.src = URL.createObjectURL(file);
+  });
+  const { cropped, bg } = preprocess(img);
+  $("input-canvas").getContext("2d").putImageData(cropped, 0, 0);
+  $("preview").classList.remove("hidden");
+  const result = solve(cropped.data, bg);
+  drawReconstruction(result.bestIdx, bg);
+  renderResult(result);
+}
+
+// ---------- preprocessing ----------
+
+function preprocess(img) {
+  // 1. Draw to large canvas at native size
+  const c = document.createElement("canvas");
+  c.width = img.naturalWidth;
+  c.height = img.naturalHeight;
+  c.getContext("2d").drawImage(img, 0, 0);
+  const full = c.getContext("2d").getImageData(0, 0, c.width, c.height);
+  // 2. Detect bg = border mode color
+  const bg = borderMode(full);
+  // 3. Find bbox of non-bg pixels
+  const { x0, y0, x1, y1 } = bboxNonBg(full, bg, 20);
+  // 4. Crop + resize to W x H
+  const cropC = document.createElement("canvas");
+  cropC.width = W; cropC.height = H;
+  cropC.getContext("2d").drawImage(c, x0, y0, x1 - x0, y1 - y0, 0, 0, W, H);
+  return { cropped: cropC.getContext("2d").getImageData(0, 0, W, H), bg };
+}
+
+function borderMode(img) {
+  const { data, width: w, height: h } = img;
+  const thick = 4;
+  const counts = new Map();
+  const sample = (x, y) => {
+    const i = (y * w + x) * 4;
+    const k = (data[i] << 16) | (data[i + 1] << 8) | data[i + 2];
+    counts.set(k, (counts.get(k) || 0) + 1);
+  };
+  for (let y = 0; y < thick; y++) for (let x = 0; x < w; x++) { sample(x, y); sample(x, h - 1 - y); }
+  for (let x = 0; x < thick; x++) for (let y = 0; y < h; y++) { sample(x, y); sample(w - 1 - x, y); }
+  let best = 0, bestC = 0;
+  for (const [k, c] of counts) if (c > bestC) { bestC = c; best = k; }
+  return [(best >> 16) & 0xff, (best >> 8) & 0xff, best & 0xff];
+}
+
+function bboxNonBg(img, bg, tol) {
+  const { data, width: w, height: h } = img;
+  let x0 = w, y0 = h, x1 = 0, y1 = 0;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4;
+      const d = Math.max(
+        Math.abs(data[i] - bg[0]),
+        Math.abs(data[i + 1] - bg[1]),
+        Math.abs(data[i + 2] - bg[2]),
+      );
+      if (d > tol) {
+        if (x < x0) x0 = x; if (x > x1) x1 = x;
+        if (y < y0) y0 = y; if (y > y1) y1 = y;
+      }
+    }
+  }
+  if (x1 < x0 || y1 < y0) return { x0: 0, y0: 0, x1: w, y1: h };
+  return { x0, y0, x1: x1 + 1, y1: y1 + 1 };
+}
+
+// ---------- solver ----------
+
+function solve(targetRGBA, bg) {
+  // Precompute per-pixel err vs bg: sum((target - bg)^2) over RGB
+  const errBg = new Float32Array(P);
+  let sumErrBg = 0;
+  for (let p = 0; p < P; p++) {
+    const i = p * 4;
+    const dr = targetRGBA[i] - bg[0];
+    const dg = targetRGBA[i + 1] - bg[1];
+    const db = targetRGBA[i + 2] - bg[2];
+    const e = dr * dr + dg * dg + db * db;
+    errBg[p] = e;
+    sumErrBg += e;
+  }
+  const N = CODES.length;
+  const scores = new Float64Array(N);
+  for (let n = 0; n < N; n++) {
+    const flag = FLAG_RGB[n];
+    const maskOffset = n * P;
+    let delta = 0;
+    for (let p = 0; p < P; p++) {
+      if (MASKS[maskOffset + p]) {
+        const i = p * 4;
+        const dr = flag[i] - targetRGBA[i];
+        const dg = flag[i + 1] - targetRGBA[i + 1];
+        const db = flag[i + 2] - targetRGBA[i + 2];
+        delta += dr * dr + dg * dg + db * db - errBg[p];
+      }
+    }
+    scores[n] = sumErrBg + delta;
+  }
+  const ranked = Array.from({ length: N }, (_, i) => i)
+    .sort((a, b) => scores[a] - scores[b]);
+  const best = ranked[0];
+  const second = ranked[1];
+  const denom = P * 3;
+  return {
+    bestIdx: best,
+    bestCode: CODES[best],
+    score: scores[best] / denom,
+    runnerUp: CODES[second],
+    margin: (scores[second] - scores[best]) / denom,
+    ranked: ranked.slice(0, 10),
+  };
+}
+
+function drawReconstruction(idx, bg) {
+  const out = new ImageData(W, H);
+  const flag = FLAG_RGB[idx];
+  for (let p = 0; p < P; p++) {
+    const i = p * 4;
+    if (MASKS[idx * P + p]) {
+      out.data[i] = flag[i];
+      out.data[i + 1] = flag[i + 1];
+      out.data[i + 2] = flag[i + 2];
+    } else {
+      out.data[i] = bg[0];
+      out.data[i + 1] = bg[1];
+      out.data[i + 2] = bg[2];
+    }
+    out.data[i + 3] = 255;
+  }
+  $("recon-canvas").getContext("2d").putImageData(out, 0, 0);
+}
+
+// ---------- result rendering ----------
+
+function getMode() {
+  return document.querySelector('input[name="mode"]:checked').value;
+}
+
+document.addEventListener("change", e => {
+  if (e.target.name === "mode" && window.__lastResult) {
+    renderResult(window.__lastResult);
+  }
+});
+
+function renderResult(result) {
+  window.__lastResult = result;
+  const meta = COUNTRIES[result.bestCode] || { name: result.bestCode.toUpperCase() };
+  const confClass = result.margin > 50 ? "high" : result.margin > 10 ? "" : "low";
+  if (getMode() === "reveal") {
+    $("result").innerHTML = `
+      <h2>Answer</h2>
+      <div class="flag-row">
+        <img src="${FLAG_URL(result.bestCode)}" alt="${meta.name}">
+        <div class="info">
+          <p class="name">${meta.name}</p>
+          <p class="sub">
+            <span class="continent-badge">${meta.region}</span>
+            ${meta.subregion}
+          </p>
+        </div>
+      </div>
+      <p class="confidence ${confClass}">
+        Code: <b>${result.bestCode.toUpperCase()}</b> &middot;
+        Score: ${result.score.toFixed(1)} &middot;
+        Margin to runner-up (${result.runnerUp.toUpperCase()}): ${result.margin.toFixed(1)}
+      </p>
+    `;
+  } else {
+    renderHelperMode(result);
+  }
+  $("result").classList.remove("hidden");
+}
+
+// ---------- helper mode (progressive hints) ----------
+
+function renderHelperMode(result) {
+  const meta = COUNTRIES[result.bestCode];
+  const stage = window.__helperStage || 0;
+  let html = `<h2>Helper mode</h2>`;
+
+  // Stage 0: continent only
+  html += `
+    <div class="hint-step">
+      <h3>Hint 1 &middot; Continent</h3>
+      <div class="value">${meta.region}</div>
+    </div>`;
+
+  if (stage >= 1) {
+    html += `
+      <div class="hint-step">
+        <h3>Hint 2 &middot; Subregion</h3>
+        <div class="value">${meta.subregion || "(unspecified)"}</div>
+      </div>`;
+  }
+  if (stage >= 2) {
+    html += `
+      <div class="hint-step">
+        <h3>Hint 3 &middot; First letter</h3>
+        <div class="value">${meta.name[0]}…</div>
+      </div>`;
+  }
+  if (stage >= 3) {
+    html += `
+      <div class="hint-step">
+        <h3>Answer revealed</h3>
+        <div class="flag-row">
+          <img src="${FLAG_URL(result.bestCode)}" alt="${meta.name}">
+          <div class="info">
+            <p class="name">${meta.name}</p>
+            <p class="sub">${meta.official}</p>
+          </div>
+        </div>
+      </div>`;
+  } else {
+    // Show clickable list of candidates from the current narrowed pool
+    let pool = Object.entries(COUNTRIES).filter(([c, m]) => {
+      if (stage === 0) return m.region === meta.region;
+      if (stage === 1) return m.subregion === meta.subregion;
+      if (stage === 2) return m.subregion === meta.subregion
+        && m.name[0].toLowerCase() === meta.name[0].toLowerCase();
+      return false;
+    });
+    pool.sort((a, b) => a[1].name.localeCompare(b[1].name));
+    html += `<p>Pick the country you think it is:</p><div class="country-grid">`;
+    for (const [code, m] of pool) {
+      html += `<button class="country-btn" data-code="${code}">
+        <img src="${FLAG_URL(code)}" alt="">
+        <span>${m.name}</span>
+      </button>`;
+    }
+    html += `</div>`;
+    html += `<button class="btn secondary" id="give-up">Show next hint</button>`;
+  }
+
+  if (stage > 0 || (window.__wrongPicks && window.__wrongPicks.length)) {
+    html += `<button class="btn secondary" id="restart-helper" style="margin-left:8px">Start over</button>`;
+  }
+
+  $("result").innerHTML = html;
+
+  // wire buttons
+  $("result").querySelectorAll(".country-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const code = btn.dataset.code;
+      if (code === result.bestCode) {
+        btn.classList.add("correct");
+        setTimeout(() => {
+          window.__helperStage = 3;
+          renderHelperMode(result);
+        }, 500);
+      } else {
+        btn.classList.add("wrong");
+        btn.disabled = true;
+        window.__wrongPicks = window.__wrongPicks || [];
+        window.__wrongPicks.push(code);
+        // Advance to next hint after wrong guess
+        setTimeout(() => {
+          window.__helperStage = Math.min(3, (window.__helperStage || 0) + 1);
+          renderHelperMode(result);
+        }, 600);
+      }
+    });
+  });
+  const giveUp = $("give-up");
+  if (giveUp) giveUp.addEventListener("click", () => {
+    window.__helperStage = Math.min(3, (window.__helperStage || 0) + 1);
+    renderHelperMode(result);
+  });
+  const restart = $("restart-helper");
+  if (restart) restart.addEventListener("click", () => {
+    window.__helperStage = 0;
+    window.__wrongPicks = [];
+    renderHelperMode(result);
+  });
+}
+
+// reset helper stage on new image
+const _origHandle = handleImageFile;
+handleImageFile = async function(f) {
+  window.__helperStage = 0;
+  window.__wrongPicks = [];
+  return _origHandle(f);
+};
+
+init().catch(err => {
+  console.error(err);
+  $("loading-msg").textContent = "Error loading database: " + err.message;
+});

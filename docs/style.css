@@ -1,0 +1,210 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0f1419;
+  color: #e6edf3;
+  min-height: 100vh;
+  line-height: 1.5;
+}
+a { color: #f5b942; }
+.hidden { display: none !important; }
+
+header {
+  text-align: center;
+  padding: 32px 16px 8px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+header h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  letter-spacing: 0.5px;
+}
+header .tag { color: #9aa6b2; margin: 0; font-size: 15px; }
+
+main {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* drop zone */
+.drop {
+  border: 2px dashed #3a4655;
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+  background: #1a212b;
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+.drop.dragover {
+  border-color: #f5b942;
+  background: #232c39;
+}
+.drop p { margin: 8px 0; }
+.drop .hint { color: #9aa6b2; font-size: 13px; }
+.file-btn {
+  color: #f5b942;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* preview grid */
+.preview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 24px;
+}
+.preview-grid figure { margin: 0; }
+.preview-grid figcaption {
+  font-size: 12px;
+  color: #9aa6b2;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.preview-grid canvas {
+  width: 100%;
+  height: auto;
+  background: #000;
+  border-radius: 6px;
+  image-rendering: pixelated;
+}
+
+/* controls */
+.controls {
+  margin: 16px 0;
+  padding: 12px;
+  background: #1a212b;
+  border-radius: 8px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.controls label { cursor: pointer; }
+
+/* result panel */
+#result {
+  margin-top: 16px;
+  padding: 24px;
+  background: #1a212b;
+  border-radius: 12px;
+}
+#result h2 { margin-top: 0; }
+
+.flag-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 16px 0;
+}
+.flag-row img {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #000;
+}
+.flag-row .info { flex: 1; }
+.flag-row .name {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+.flag-row .sub { color: #9aa6b2; font-size: 14px; margin: 4px 0 0; }
+
+.confidence {
+  font-size: 12px;
+  color: #9aa6b2;
+  margin-top: 8px;
+}
+.confidence.low { color: #ff6b6b; }
+.confidence.high { color: #43d17a; }
+
+/* helper-mode hints */
+.hint-step {
+  padding: 16px;
+  background: #232c39;
+  border-radius: 8px;
+  margin: 12px 0;
+  border-left: 4px solid #f5b942;
+}
+.hint-step h3 { margin: 0 0 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; color: #9aa6b2; }
+.hint-step .value { font-size: 20px; font-weight: 600; }
+
+.country-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+}
+.country-btn {
+  background: #2d3848;
+  border: 1px solid #3a4655;
+  color: #e6edf3;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  text-align: left;
+  transition: all 0.1s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.country-btn:hover { background: #3a4655; border-color: #f5b942; }
+.country-btn.wrong { background: #4a1f1f; border-color: #ff6b6b; opacity: 0.5; cursor: not-allowed; }
+.country-btn.correct { background: #1f4a2c; border-color: #43d17a; }
+.country-btn img { width: 24px; height: 16px; object-fit: cover; border-radius: 2px; }
+
+.btn {
+  background: #f5b942;
+  color: #0f1419;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 12px;
+}
+.btn:hover { background: #ffc961; }
+.btn.secondary { background: #2d3848; color: #e6edf3; }
+
+/* loading */
+.loading {
+  padding: 24px;
+  text-align: center;
+  background: #1a212b;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+.loading progress {
+  width: 100%;
+  max-width: 400px;
+  margin-top: 12px;
+}
+
+/* continent badge */
+.continent-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #2d3848;
+  border-radius: 4px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #f5b942;
+  margin-right: 8px;
+}
+
+footer {
+  text-align: center;
+  padding: 32px 16px;
+  color: #9aa6b2;
+  font-size: 13px;
+}

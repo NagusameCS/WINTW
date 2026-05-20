@@ -1,0 +1,12 @@
+# .gitignore
+__pycache__/
+*.pyc
+*.pyo
+
+# generated artifacts (rebuildable from sources via scripts/)
+data/cache/
+data/flags/
+
+# noisy test logs
+*.txt
+!requirements.txt
