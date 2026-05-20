@@ -11,14 +11,21 @@
 // Flag PNGs are fetched lazily from flagcdn.com (cached by browser).
 
 const W = 400, H = 267, P = W * H;
-const OPENER = "sz";
+const DEFAULT_OPENER = "sz";
 const FLAG_URL = (code) => `https://flagcdn.com/w320/${code}.png`;
+// Flagle's exact match rule (see flagle/flagle_exact.py):
+//   dist_sq = (dr)^2 + (dg)^2 + (db)^2 < THRESHOLD_DIST_SQ  AND both alphas > 127
+//   THRESHOLD_DIST_SQ = (18/100)^2 * (3 * 255^2)
+const THRESHOLD_DIST_SQ = (18 / 100) ** 2 * (3 * 255 * 255);
+const ALPHA_HI = 127;
 
 const $ = (id) => document.getElementById(id);
 
 let CODES = [];           // ["ad","ae",...]  length 197
 let COUNTRIES = {};       // {code: {name, region, subregion, official}}
-let MASKS = null;         // Uint8Array, length 197*P (unpacked bits, 0/1)
+let OPENERS = [];         // [{code, name, unique, min_hamming, rank}, ...]
+let MASKS = null;         // Uint8Array, length 197*P (unpacked bits, 0/1) — for current OPENER
+let CURRENT_OPENER = DEFAULT_OPENER;
 let FLAG_RGB = [];        // Array of Uint8ClampedArray(P*4) RGBA per candidate
 let FLAGS_LOADED = 0;
 let SOLVE_ENABLED = false;
@@ -27,13 +34,15 @@ let SOLVE_ENABLED = false;
 
 async function init() {
   showLoading("Loading reveal-mask database (2.6 MB)…", 0);
-  const [codesRes, countriesRes, masksRes] = await Promise.all([
+  const [codesRes, countriesRes, openersRes, masksRes] = await Promise.all([
     fetch("data/codes.json").then(r => r.json()),
     fetch("data/countries.json").then(r => r.json()),
+    fetch("data/openers.json").then(r => r.json()),
     fetch("data/masks_sz.bin").then(r => r.arrayBuffer()),
   ]);
   CODES = codesRes;
   COUNTRIES = countriesRes;
+  OPENERS = openersRes;
   MASKS = unpackBits(new Uint8Array(masksRes), CODES.length * P);
   showLoading("Fetching 197 flag images (cached after first load)…", 5);
   FLAG_RGB = new Array(CODES.length);
@@ -45,6 +54,12 @@ async function init() {
   }));
   FLAGS_LOADED = CODES.length;
   SOLVE_ENABLED = true;
+  // Restore opener preference (if any)
+  const saved = localStorage.getItem("flagle_opener");
+  if (saved && CODES.includes(saved) && saved !== DEFAULT_OPENER) {
+    setOpener(saved);
+  }
+  setupOpenerPicker();
   hideLoading();
   setupDropzone();
   setupPaste();
@@ -72,6 +87,87 @@ async function loadFlag(code) {
   const ctx = c.getContext("2d");
   ctx.drawImage(img, 0, 0, W, H);
   return ctx.getImageData(0, 0, W, H).data; // RGBA Uint8ClampedArray
+}
+
+// ---------- opener picker ----------
+
+function setupOpenerPicker() {
+  const sel = $("opener-select");
+  sel.innerHTML = "";
+  // Group: ranked (unique) first, then non-unique alphabetically
+  const ranked = OPENERS.filter(o => o.unique);
+  const unranked = OPENERS.filter(o => !o.unique);
+  const optGroupRanked = document.createElement("optgroup");
+  optGroupRanked.label = `1-guess lock-in (${ranked.length} openers)`;
+  for (const o of ranked) {
+    const opt = document.createElement("option");
+    opt.value = o.code;
+    opt.textContent = `#${o.rank} — ${o.name} (${o.code.toUpperCase()})  · margin ${o.min_hamming}px`;
+    optGroupRanked.appendChild(opt);
+  }
+  sel.appendChild(optGroupRanked);
+  const optGroupOther = document.createElement("optgroup");
+  optGroupOther.label = `Not unique — collisions exist (${unranked.length})`;
+  for (const o of unranked) {
+    const opt = document.createElement("option");
+    opt.value = o.code;
+    opt.textContent = `${o.name} (${o.code.toUpperCase()})  · best-effort only`;
+    optGroupOther.appendChild(opt);
+  }
+  sel.appendChild(optGroupOther);
+  sel.value = CURRENT_OPENER;
+  updateOpenerRankBadge();
+  sel.addEventListener("change", () => setOpener(sel.value));
+}
+
+function updateOpenerRankBadge() {
+  const o = OPENERS.find(x => x.code === CURRENT_OPENER);
+  const badge = $("opener-rank");
+  if (!o) { badge.textContent = ""; return; }
+  if (o.unique) {
+    badge.textContent = `Rank #${o.rank} of ${OPENERS.filter(x => x.unique).length}`;
+    badge.classList.remove("bad");
+  } else {
+    badge.textContent = `Not unique — answers may be ambiguous`;
+    badge.classList.add("bad");
+  }
+}
+
+function setOpener(code) {
+  if (code === CURRENT_OPENER) return;
+  CURRENT_OPENER = code;
+  localStorage.setItem("flagle_opener", code);
+  // Recompute masks client-side using the Flagle rule
+  recomputeMasks();
+  updateOpenerRankBadge();
+  $("opener-select").value = code;
+  // If a result was on screen, re-solve with the new opener
+  if (window.__lastInput) {
+    const r = solve(window.__lastInput.data, window.__lastInput.bg);
+    drawReconstruction(r.bestIdx, window.__lastInput.bg);
+    renderResult(r);
+  }
+}
+
+function recomputeMasks() {
+  const openerIdx = CODES.indexOf(CURRENT_OPENER);
+  if (openerIdx < 0) return;
+  const opener = FLAG_RGB[openerIdx];
+  const N = CODES.length;
+  MASKS = new Uint8Array(N * P);
+  for (let n = 0; n < N; n++) {
+    const flag = FLAG_RGB[n];
+    const off = n * P;
+    for (let p = 0; p < P; p++) {
+      const i = p * 4;
+      const dr = opener[i] - flag[i];
+      const dg = opener[i + 1] - flag[i + 1];
+      const db = opener[i + 2] - flag[i + 2];
+      const dist2 = dr * dr + dg * dg + db * db;
+      const alphaOk = opener[i + 3] > ALPHA_HI && flag[i + 3] > ALPHA_HI;
+      MASKS[off + p] = (dist2 < THRESHOLD_DIST_SQ && alphaOk) ? 1 : 0;
+    }
+  }
 }
 
 // ---------- UI loading state ----------
@@ -126,6 +222,7 @@ async function handleImageFile(file) {
   const { cropped, bg } = preprocess(img);
   $("input-canvas").getContext("2d").putImageData(cropped, 0, 0);
   $("preview").classList.remove("hidden");
+  window.__lastInput = { data: cropped.data, bg };
   const result = solve(cropped.data, bg);
   drawReconstruction(result.bestIdx, bg);
   renderResult(result);

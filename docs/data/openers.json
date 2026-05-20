@@ -1,0 +1,1775 @@
+[
+  {
+    "code": "sz",
+    "name": "Eswatini",
+    "unique": true,
+    "min_hamming": 124,
+    "min_reveal": 54,
+    "mean_reveal": 15222.1,
+    "rank": 1
+  },
+  {
+    "code": "fj",
+    "name": "Fiji",
+    "unique": true,
+    "min_hamming": 88,
+    "min_reveal": 54,
+    "mean_reveal": 10273.6,
+    "rank": 2
+  },
+  {
+    "code": "za",
+    "name": "South Africa",
+    "unique": true,
+    "min_hamming": 33,
+    "min_reveal": 64,
+    "mean_reveal": 17527.9,
+    "rank": 3
+  },
+  {
+    "code": "ki",
+    "name": "Kiribati",
+    "unique": true,
+    "min_hamming": 16,
+    "min_reveal": 14,
+    "mean_reveal": 23749.3,
+    "rank": 4
+  },
+  {
+    "code": "sc",
+    "name": "Seychelles",
+    "unique": true,
+    "min_hamming": 14,
+    "min_reveal": 152,
+    "mean_reveal": 23701.7,
+    "rank": 5
+  },
+  {
+    "code": "rs",
+    "name": "Serbia",
+    "unique": true,
+    "min_hamming": 13,
+    "min_reveal": 1,
+    "mean_reveal": 19926.7,
+    "rank": 6
+  },
+  {
+    "code": "ht",
+    "name": "Haiti",
+    "unique": true,
+    "min_hamming": 9,
+    "min_reveal": 5,
+    "mean_reveal": 22466.0,
+    "rank": 7
+  },
+  {
+    "code": "bi",
+    "name": "Burundi",
+    "unique": true,
+    "min_hamming": 4,
+    "min_reveal": 2,
+    "mean_reveal": 18801.4,
+    "rank": 8
+  },
+  {
+    "code": "pt",
+    "name": "Portugal",
+    "unique": true,
+    "min_hamming": 3,
+    "min_reveal": 5,
+    "mean_reveal": 20741.4,
+    "rank": 9
+  },
+  {
+    "code": "sm",
+    "name": "San Marino",
+    "unique": true,
+    "min_hamming": 3,
+    "min_reveal": 4,
+    "mean_reveal": 10471.7,
+    "rank": 10
+  },
+  {
+    "code": "ag",
+    "name": "Antigua and Barbuda",
+    "unique": true,
+    "min_hamming": 2,
+    "min_reveal": 86,
+    "mean_reveal": 20813.4,
+    "rank": 11
+  },
+  {
+    "code": "dm",
+    "name": "Dominica",
+    "unique": true,
+    "min_hamming": 2,
+    "min_reveal": 0,
+    "mean_reveal": 16977.3,
+    "rank": 12
+  },
+  {
+    "code": "do",
+    "name": "Dominican Republic",
+    "unique": true,
+    "min_hamming": 2,
+    "min_reveal": 0,
+    "mean_reveal": 24755.3,
+    "rank": 13
+  },
+  {
+    "code": "gb",
+    "name": "United Kingdom",
+    "unique": true,
+    "min_hamming": 2,
+    "min_reveal": 0,
+    "mean_reveal": 21080.9,
+    "rank": 14
+  },
+  {
+    "code": "ec",
+    "name": "Ecuador",
+    "unique": true,
+    "min_hamming": 1,
+    "min_reveal": 37,
+    "mean_reveal": 16075.8,
+    "rank": 15
+  },
+  {
+    "code": "gy",
+    "name": "Guyana",
+    "unique": true,
+    "min_hamming": 1,
+    "min_reveal": 18,
+    "mean_reveal": 16808.2,
+    "rank": 16
+  },
+  {
+    "code": "af",
+    "name": "Afghanistan",
+    "unique": true,
+    "min_hamming": 1,
+    "min_reveal": 0,
+    "mean_reveal": 14684.7,
+    "rank": 17
+  },
+  {
+    "code": "nz",
+    "name": "New Zealand",
+    "unique": true,
+    "min_hamming": 1,
+    "min_reveal": 0,
+    "mean_reveal": 15093.7,
+    "rank": 18
+  },
+  {
+    "code": "al",
+    "name": "Albania",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24644.9,
+    "rank": null
+  },
+  {
+    "code": "dz",
+    "name": "Algeria",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 17713.1,
+    "rank": null
+  },
+  {
+    "code": "ad",
+    "name": "Andorra",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 20964.1,
+    "rank": null
+  },
+  {
+    "code": "ao",
+    "name": "Angola",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 19280.7,
+    "rank": null
+  },
+  {
+    "code": "ar",
+    "name": "Argentina",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 11485.3,
+    "rank": null
+  },
+  {
+    "code": "am",
+    "name": "Armenia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18888.6,
+    "rank": null
+  },
+  {
+    "code": "au",
+    "name": "Australia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 15078.3,
+    "rank": null
+  },
+  {
+    "code": "at",
+    "name": "Austria",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 31630.4,
+    "rank": null
+  },
+  {
+    "code": "az",
+    "name": "Azerbaijan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 10754.9,
+    "rank": null
+  },
+  {
+    "code": "bs",
+    "name": "Bahamas",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 14192.4,
+    "rank": null
+  },
+  {
+    "code": "bh",
+    "name": "Bahrain",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 28063.9,
+    "rank": null
+  },
+  {
+    "code": "bd",
+    "name": "Bangladesh",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 20923.1,
+    "rank": null
+  },
+  {
+    "code": "bb",
+    "name": "Barbados",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 13898.5,
+    "rank": null
+  },
+  {
+    "code": "by",
+    "name": "Belarus",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 27403.6,
+    "rank": null
+  },
+  {
+    "code": "be",
+    "name": "Belgium",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 16729.4,
+    "rank": null
+  },
+  {
+    "code": "bz",
+    "name": "Belize",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 17767.2,
+    "rank": null
+  },
+  {
+    "code": "bj",
+    "name": "Benin",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18951.6,
+    "rank": null
+  },
+  {
+    "code": "bt",
+    "name": "Bhutan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 10865.0,
+    "rank": null
+  },
+  {
+    "code": "bo",
+    "name": "Bolivia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 18,
+    "mean_reveal": 22023.4,
+    "rank": null
+  },
+  {
+    "code": "ba",
+    "name": "Bosnia and Herzegovina",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 13818.8,
+    "rank": null
+  },
+  {
+    "code": "bw",
+    "name": "Botswana",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 6709.6,
+    "rank": null
+  },
+  {
+    "code": "br",
+    "name": "Brazil",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 14924.7,
+    "rank": null
+  },
+  {
+    "code": "bn",
+    "name": "Brunei",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 79,
+    "mean_reveal": 12457.7,
+    "rank": null
+  },
+  {
+    "code": "bg",
+    "name": "Bulgaria",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18699.0,
+    "rank": null
+  },
+  {
+    "code": "bf",
+    "name": "Burkina Faso",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24384.7,
+    "rank": null
+  },
+  {
+    "code": "kh",
+    "name": "Cambodia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 20658.0,
+    "rank": null
+  },
+  {
+    "code": "cm",
+    "name": "Cameroon",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18222.6,
+    "rank": null
+  },
+  {
+    "code": "ca",
+    "name": "Canada",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 23290.5,
+    "rank": null
+  },
+  {
+    "code": "cv",
+    "name": "Cape Verde",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 2,
+    "mean_reveal": 17160.8,
+    "rank": null
+  },
+  {
+    "code": "cf",
+    "name": "Central African Republic",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 17683.7,
+    "rank": null
+  },
+  {
+    "code": "td",
+    "name": "Chad",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 22843.1,
+    "rank": null
+  },
+  {
+    "code": "cl",
+    "name": "Chile",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 25012.0,
+    "rank": null
+  },
+  {
+    "code": "cn",
+    "name": "China",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 30901.6,
+    "rank": null
+  },
+  {
+    "code": "co",
+    "name": "Colombia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 16798.7,
+    "rank": null
+  },
+  {
+    "code": "km",
+    "name": "Comoros",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 16759.2,
+    "rank": null
+  },
+  {
+    "code": "cr",
+    "name": "Costa Rica",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18689.5,
+    "rank": null
+  },
+  {
+    "code": "hr",
+    "name": "Croatia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 21993.6,
+    "rank": null
+  },
+  {
+    "code": "cu",
+    "name": "Cuba",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18535.1,
+    "rank": null
+  },
+  {
+    "code": "cy",
+    "name": "Cyprus",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 15678.4,
+    "rank": null
+  },
+  {
+    "code": "cz",
+    "name": "Czechia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 23385.6,
+    "rank": null
+  },
+  {
+    "code": "cd",
+    "name": "DR Congo",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 11179.3,
+    "rank": null
+  },
+  {
+    "code": "dk",
+    "name": "Denmark",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 30719.3,
+    "rank": null
+  },
+  {
+    "code": "dj",
+    "name": "Djibouti",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 13423.0,
+    "rank": null
+  },
+  {
+    "code": "eg",
+    "name": "Egypt",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 22495.4,
+    "rank": null
+  },
+  {
+    "code": "sv",
+    "name": "El Salvador",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18909.7,
+    "rank": null
+  },
+  {
+    "code": "gq",
+    "name": "Equatorial Guinea",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 19329.0,
+    "rank": null
+  },
+  {
+    "code": "er",
+    "name": "Eritrea",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 16700.7,
+    "rank": null
+  },
+  {
+    "code": "ee",
+    "name": "Estonia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 10108.7,
+    "rank": null
+  },
+  {
+    "code": "et",
+    "name": "Ethiopia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 17969.9,
+    "rank": null
+  },
+  {
+    "code": "fi",
+    "name": "Finland",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 15162.7,
+    "rank": null
+  },
+  {
+    "code": "fr",
+    "name": "France",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24879.4,
+    "rank": null
+  },
+  {
+    "code": "ga",
+    "name": "Gabon",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 10733.0,
+    "rank": null
+  },
+  {
+    "code": "gm",
+    "name": "Gambia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24735.2,
+    "rank": null
+  },
+  {
+    "code": "ge",
+    "name": "Georgia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 19120.2,
+    "rank": null
+  },
+  {
+    "code": "de",
+    "name": "Germany",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 13054.7,
+    "rank": null
+  },
+  {
+    "code": "gh",
+    "name": "Ghana",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 22905.5,
+    "rank": null
+  },
+  {
+    "code": "gr",
+    "name": "Greece",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 15042.8,
+    "rank": null
+  },
+  {
+    "code": "gd",
+    "name": "Grenada",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 21310.8,
+    "rank": null
+  },
+  {
+    "code": "gt",
+    "name": "Guatemala",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 10274.3,
+    "rank": null
+  },
+  {
+    "code": "gn",
+    "name": "Guinea",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18855.8,
+    "rank": null
+  },
+  {
+    "code": "gw",
+    "name": "Guinea-Bissau",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18863.5,
+    "rank": null
+  },
+  {
+    "code": "hn",
+    "name": "Honduras",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 11927.9,
+    "rank": null
+  },
+  {
+    "code": "hu",
+    "name": "Hungary",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 23997.7,
+    "rank": null
+  },
+  {
+    "code": "is",
+    "name": "Iceland",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18495.1,
+    "rank": null
+  },
+  {
+    "code": "in",
+    "name": "India",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18187.1,
+    "rank": null
+  },
+  {
+    "code": "id",
+    "name": "Indonesia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 22490.1,
+    "rank": null
+  },
+  {
+    "code": "ir",
+    "name": "Iran",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 22458.6,
+    "rank": null
+  },
+  {
+    "code": "iq",
+    "name": "Iraq",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 22373.3,
+    "rank": null
+  },
+  {
+    "code": "ie",
+    "name": "Ireland",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 13156.7,
+    "rank": null
+  },
+  {
+    "code": "il",
+    "name": "Israel",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 17554.9,
+    "rank": null
+  },
+  {
+    "code": "it",
+    "name": "Italy",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 23411.5,
+    "rank": null
+  },
+  {
+    "code": "ci",
+    "name": "Ivory Coast",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 13032.9,
+    "rank": null
+  },
+  {
+    "code": "jm",
+    "name": "Jamaica",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 11448.5,
+    "rank": null
+  },
+  {
+    "code": "jp",
+    "name": "Japan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 17866.2,
+    "rank": null
+  },
+  {
+    "code": "jo",
+    "name": "Jordan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 19699.6,
+    "rank": null
+  },
+  {
+    "code": "kz",
+    "name": "Kazakhstan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 5881.1,
+    "rank": null
+  },
+  {
+    "code": "ke",
+    "name": "Kenya",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 15038.9,
+    "rank": null
+  },
+  {
+    "code": "xk",
+    "name": "Kosovo",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 12141.2,
+    "rank": null
+  },
+  {
+    "code": "kw",
+    "name": "Kuwait",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 21574.3,
+    "rank": null
+  },
+  {
+    "code": "kg",
+    "name": "Kyrgyzstan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 25957.2,
+    "rank": null
+  },
+  {
+    "code": "la",
+    "name": "Laos",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 25580.5,
+    "rank": null
+  },
+  {
+    "code": "lv",
+    "name": "Latvia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24756.7,
+    "rank": null
+  },
+  {
+    "code": "lb",
+    "name": "Lebanon",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 27848.0,
+    "rank": null
+  },
+  {
+    "code": "ls",
+    "name": "Lesotho",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 19440.8,
+    "rank": null
+  },
+  {
+    "code": "lr",
+    "name": "Liberia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 23112.8,
+    "rank": null
+  },
+  {
+    "code": "ly",
+    "name": "Libya",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 16786.0,
+    "rank": null
+  },
+  {
+    "code": "li",
+    "name": "Liechtenstein",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 22537.6,
+    "rank": null
+  },
+  {
+    "code": "lt",
+    "name": "Lithuania",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 17669.6,
+    "rank": null
+  },
+  {
+    "code": "lu",
+    "name": "Luxembourg",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 22855.7,
+    "rank": null
+  },
+  {
+    "code": "mg",
+    "name": "Madagascar",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 21880.9,
+    "rank": null
+  },
+  {
+    "code": "mw",
+    "name": "Malawi",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18961.3,
+    "rank": null
+  },
+  {
+    "code": "my",
+    "name": "Malaysia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 19961.3,
+    "rank": null
+  },
+  {
+    "code": "mv",
+    "name": "Maldives",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 26375.6,
+    "rank": null
+  },
+  {
+    "code": "ml",
+    "name": "Mali",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 21579.1,
+    "rank": null
+  },
+  {
+    "code": "mt",
+    "name": "Malta",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 26869.5,
+    "rank": null
+  },
+  {
+    "code": "mh",
+    "name": "Marshall Islands",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 14837.9,
+    "rank": null
+  },
+  {
+    "code": "mr",
+    "name": "Mauritania",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 20643.9,
+    "rank": null
+  },
+  {
+    "code": "mu",
+    "name": "Mauritius",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 19242.6,
+    "rank": null
+  },
+  {
+    "code": "mx",
+    "name": "Mexico",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 2,
+    "mean_reveal": 25271.6,
+    "rank": null
+  },
+  {
+    "code": "fm",
+    "name": "Micronesia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 4380.3,
+    "rank": null
+  },
+  {
+    "code": "md",
+    "name": "Moldova",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 21723.5,
+    "rank": null
+  },
+  {
+    "code": "mc",
+    "name": "Monaco",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 25426.5,
+    "rank": null
+  },
+  {
+    "code": "mn",
+    "name": "Mongolia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24304.0,
+    "rank": null
+  },
+  {
+    "code": "me",
+    "name": "Montenegro",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24979.5,
+    "rank": null
+  },
+  {
+    "code": "ma",
+    "name": "Morocco",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 27939.7,
+    "rank": null
+  },
+  {
+    "code": "mz",
+    "name": "Mozambique",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 157,
+    "mean_reveal": 14260.8,
+    "rank": null
+  },
+  {
+    "code": "mm",
+    "name": "Myanmar",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 17972.4,
+    "rank": null
+  },
+  {
+    "code": "na",
+    "name": "Namibia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 21357.0,
+    "rank": null
+  },
+  {
+    "code": "nr",
+    "name": "Nauru",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 13235.4,
+    "rank": null
+  },
+  {
+    "code": "np",
+    "name": "Nepal",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 14105.8,
+    "rank": null
+  },
+  {
+    "code": "nl",
+    "name": "Netherlands",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24689.0,
+    "rank": null
+  },
+  {
+    "code": "ni",
+    "name": "Nicaragua",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 16314.5,
+    "rank": null
+  },
+  {
+    "code": "ne",
+    "name": "Niger",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 21401.8,
+    "rank": null
+  },
+  {
+    "code": "ng",
+    "name": "Nigeria",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 17047.6,
+    "rank": null
+  },
+  {
+    "code": "kp",
+    "name": "North Korea",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24280.2,
+    "rank": null
+  },
+  {
+    "code": "mk",
+    "name": "North Macedonia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24786.2,
+    "rank": null
+  },
+  {
+    "code": "no",
+    "name": "Norway",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 25175.9,
+    "rank": null
+  },
+  {
+    "code": "om",
+    "name": "Oman",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 23772.8,
+    "rank": null
+  },
+  {
+    "code": "pk",
+    "name": "Pakistan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 14680.3,
+    "rank": null
+  },
+  {
+    "code": "pw",
+    "name": "Palau",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 6464.1,
+    "rank": null
+  },
+  {
+    "code": "ps",
+    "name": "Palestine",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18650.0,
+    "rank": null
+  },
+  {
+    "code": "pa",
+    "name": "Panama",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 22230.1,
+    "rank": null
+  },
+  {
+    "code": "pg",
+    "name": "Papua New Guinea",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 19361.8,
+    "rank": null
+  },
+  {
+    "code": "py",
+    "name": "Paraguay",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 25293.6,
+    "rank": null
+  },
+  {
+    "code": "pe",
+    "name": "Peru",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 28897.0,
+    "rank": null
+  },
+  {
+    "code": "ph",
+    "name": "Philippines",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 21900.1,
+    "rank": null
+  },
+  {
+    "code": "pl",
+    "name": "Poland",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24797.1,
+    "rank": null
+  },
+  {
+    "code": "qa",
+    "name": "Qatar",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 16671.6,
+    "rank": null
+  },
+  {
+    "code": "cg",
+    "name": "Republic of the Congo",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 19893.8,
+    "rank": null
+  },
+  {
+    "code": "ro",
+    "name": "Romania",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 22919.9,
+    "rank": null
+  },
+  {
+    "code": "ru",
+    "name": "Russia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 20207.1,
+    "rank": null
+  },
+  {
+    "code": "rw",
+    "name": "Rwanda",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 10727.6,
+    "rank": null
+  },
+  {
+    "code": "kn",
+    "name": "Saint Kitts and Nevis",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 17213.2,
+    "rank": null
+  },
+  {
+    "code": "lc",
+    "name": "Saint Lucia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 5050.5,
+    "rank": null
+  },
+  {
+    "code": "vc",
+    "name": "Saint Vincent and the Grenadines",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 14150.8,
+    "rank": null
+  },
+  {
+    "code": "ws",
+    "name": "Samoa",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 29018.8,
+    "rank": null
+  },
+  {
+    "code": "sa",
+    "name": "Saudi Arabia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 15524.4,
+    "rank": null
+  },
+  {
+    "code": "sn",
+    "name": "Senegal",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 22065.7,
+    "rank": null
+  },
+  {
+    "code": "sl",
+    "name": "Sierra Leone",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 16919.8,
+    "rank": null
+  },
+  {
+    "code": "sg",
+    "name": "Singapore",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24359.6,
+    "rank": null
+  },
+  {
+    "code": "sk",
+    "name": "Slovakia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 20528.6,
+    "rank": null
+  },
+  {
+    "code": "si",
+    "name": "Slovenia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 14268.3,
+    "rank": null
+  },
+  {
+    "code": "sb",
+    "name": "Solomon Islands",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 13885.1,
+    "rank": null
+  },
+  {
+    "code": "so",
+    "name": "Somalia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 8697.3,
+    "rank": null
+  },
+  {
+    "code": "kr",
+    "name": "South Korea",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 16306.5,
+    "rank": null
+  },
+  {
+    "code": "ss",
+    "name": "South Sudan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 14435.0,
+    "rank": null
+  },
+  {
+    "code": "es",
+    "name": "Spain",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 20269.9,
+    "rank": null
+  },
+  {
+    "code": "lk",
+    "name": "Sri Lanka",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 12589.9,
+    "rank": null
+  },
+  {
+    "code": "sd",
+    "name": "Sudan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 21285.2,
+    "rank": null
+  },
+  {
+    "code": "sr",
+    "name": "Suriname",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 19721.7,
+    "rank": null
+  },
+  {
+    "code": "se",
+    "name": "Sweden",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 15196.8,
+    "rank": null
+  },
+  {
+    "code": "ch",
+    "name": "Switzerland",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 27180.9,
+    "rank": null
+  },
+  {
+    "code": "sy",
+    "name": "Syria",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 15612.6,
+    "rank": null
+  },
+  {
+    "code": "st",
+    "name": "S\u00e3o Tom\u00e9 and Pr\u00edncipe",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 15653.2,
+    "rank": null
+  },
+  {
+    "code": "tw",
+    "name": "Taiwan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 24257.0,
+    "rank": null
+  },
+  {
+    "code": "tj",
+    "name": "Tajikistan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 23708.7,
+    "rank": null
+  },
+  {
+    "code": "tz",
+    "name": "Tanzania",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 8296.7,
+    "rank": null
+  },
+  {
+    "code": "th",
+    "name": "Thailand",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18762.8,
+    "rank": null
+  },
+  {
+    "code": "tl",
+    "name": "Timor-Leste",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 27323.0,
+    "rank": null
+  },
+  {
+    "code": "tg",
+    "name": "Togo",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18327.9,
+    "rank": null
+  },
+  {
+    "code": "to",
+    "name": "Tonga",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 28135.7,
+    "rank": null
+  },
+  {
+    "code": "tt",
+    "name": "Trinidad and Tobago",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 25553.2,
+    "rank": null
+  },
+  {
+    "code": "tn",
+    "name": "Tunisia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 30788.1,
+    "rank": null
+  },
+  {
+    "code": "tr",
+    "name": "Turkey",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 30752.9,
+    "rank": null
+  },
+  {
+    "code": "tm",
+    "name": "Turkmenistan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 15368.5,
+    "rank": null
+  },
+  {
+    "code": "tv",
+    "name": "Tuvalu",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 10099.7,
+    "rank": null
+  },
+  {
+    "code": "ug",
+    "name": "Uganda",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 28,
+    "mean_reveal": 15277.6,
+    "rank": null
+  },
+  {
+    "code": "ua",
+    "name": "Ukraine",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 9933.1,
+    "rank": null
+  },
+  {
+    "code": "ae",
+    "name": "United Arab Emirates",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18988.3,
+    "rank": null
+  },
+  {
+    "code": "us",
+    "name": "United States",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 21483.3,
+    "rank": null
+  },
+  {
+    "code": "uy",
+    "name": "Uruguay",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 15053.7,
+    "rank": null
+  },
+  {
+    "code": "uz",
+    "name": "Uzbekistan",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 17970.6,
+    "rank": null
+  },
+  {
+    "code": "vu",
+    "name": "Vanuatu",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 19589.1,
+    "rank": null
+  },
+  {
+    "code": "va",
+    "name": "Vatican City",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 10,
+    "mean_reveal": 12354.4,
+    "rank": null
+  },
+  {
+    "code": "ve",
+    "name": "Venezuela",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 18925.4,
+    "rank": null
+  },
+  {
+    "code": "vn",
+    "name": "Vietnam",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 26259.6,
+    "rank": null
+  },
+  {
+    "code": "ye",
+    "name": "Yemen",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 22984.9,
+    "rank": null
+  },
+  {
+    "code": "zm",
+    "name": "Zambia",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 11344.3,
+    "rank": null
+  },
+  {
+    "code": "zw",
+    "name": "Zimbabwe",
+    "unique": false,
+    "min_hamming": 0,
+    "min_reveal": 0,
+    "mean_reveal": 14694.7,
+    "rank": null
+  }
+]

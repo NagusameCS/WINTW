@@ -16,12 +16,23 @@
   </header>
 
   <main>
+    <section id="opener-picker" class="opener-picker">
+      <label for="opener-select"><b>Your opener:</b></label>
+      <select id="opener-select"><option>loading…</option></select>
+      <span id="opener-rank" class="opener-rank"></span>
+      <p class="hint" id="opener-hint">
+        Eswatini (rank #1) gives a guaranteed 1-guess lock-in.
+        Pick a different opener if you prefer; ranks below show how
+        robustly each one discriminates all 197 flags.
+      </p>
+    </section>
+
     <section id="drop-zone" class="drop">
       <p>
         <b>Drop screenshot here</b><br>
         or paste (Ctrl/Cmd-V) &middot; <label class="file-btn">browse<input id="file" type="file" accept="image/*" hidden></label>
       </p>
-      <p class="hint">Tip: open <a href="https://flagle-game.com/unlimited" target="_blank" rel="noopener">flagle-game.com/unlimited</a>, guess <b>SZ</b> first, then drop a screenshot of the canvas here.</p>
+      <p class="hint">Tip: open <a href="https://flagle-game.com/unlimited" target="_blank" rel="noopener">flagle-game.com/unlimited</a>, guess your chosen opener first, then drop a screenshot of the canvas here.</p>
     </section>
 
     <section id="preview" class="hidden">

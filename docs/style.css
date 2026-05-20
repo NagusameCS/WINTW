@@ -29,6 +29,41 @@ main {
   padding: 16px;
 }
 
+/* opener picker */
+.opener-picker {
+  background: #1a212b;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.opener-picker select {
+  background: #2d3848;
+  color: #e6edf3;
+  border: 1px solid #3a4655;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 14px;
+  min-width: 240px;
+}
+.opener-rank {
+  font-size: 13px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #2d3848;
+  color: #f5b942;
+}
+.opener-rank.bad { color: #ff6b6b; }
+.opener-picker .hint {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: #9aa6b2;
+  margin: 4px 0 0;
+}
+
 /* drop zone */
 .drop {
   border: 2px dashed #3a4655;
