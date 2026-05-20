@@ -142,13 +142,44 @@ function preprocess(img) {
   const full = c.getContext("2d").getImageData(0, 0, c.width, c.height);
   // 2. Detect bg = border mode color
   const bg = borderMode(full);
-  // 3. Find bbox of non-bg pixels
-  const { x0, y0, x1, y1 } = bboxNonBg(full, bg, 20);
-  // 4. Crop + resize to W x H
+  // 3. Find bbox of non-bg pixels. With sparse reveal masks the bbox can be
+  //    much narrower than the real 400x267 game canvas, so we MUST NOT just
+  //    stretch it — that destroys the flag's 3:2 aspect ratio and the MLE
+  //    template match will pick the wrong country (e.g. Chad vs Romania).
+  let { x0, y0, x1, y1 } = bboxNonBg(full, bg, 20);
+  let bw = x1 - x0, bh = y1 - y0;
+  const targetAspect = W / H; // 400/267 ≈ 1.498
+  if (bw / bh > targetAspect) {
+    // bbox is too wide: expand height symmetrically with bg padding
+    const newH = bw / targetAspect;
+    const pad = (newH - bh) / 2;
+    y0 -= pad; y1 += pad; bh = newH;
+  } else {
+    // bbox is too tall: expand width symmetrically
+    const newW = bh * targetAspect;
+    const pad = (newW - bw) / 2;
+    x0 -= pad; x1 += pad; bw = newW;
+  }
+  // 4. Draw into W×H canvas with bg fill for any out-of-source area
   const cropC = document.createElement("canvas");
   cropC.width = W; cropC.height = H;
-  cropC.getContext("2d").drawImage(c, x0, y0, x1 - x0, y1 - y0, 0, 0, W, H);
-  return { cropped: cropC.getContext("2d").getImageData(0, 0, W, H), bg };
+  const cctx = cropC.getContext("2d");
+  cctx.fillStyle = `rgb(${bg[0]},${bg[1]},${bg[2]})`;
+  cctx.fillRect(0, 0, W, H);
+  // Compute the source rect clipped to the image and the matching dest rect.
+  const sx = Math.max(0, x0);
+  const sy = Math.max(0, y0);
+  const sw = Math.min(c.width, x1) - sx;
+  const sh = Math.min(c.height, y1) - sy;
+  if (sw > 0 && sh > 0) {
+    const scaleX = W / bw, scaleY = H / bh;
+    const dx = (sx - x0) * scaleX;
+    const dy = (sy - y0) * scaleY;
+    const dw = sw * scaleX;
+    const dh = sh * scaleY;
+    cctx.drawImage(c, sx, sy, sw, sh, dx, dy, dw, dh);
+  }
+  return { cropped: cctx.getImageData(0, 0, W, H), bg, bbox: { x0, y0, x1, y1 } };
 }
 
 function borderMode(img) {
@@ -232,6 +263,7 @@ function solve(targetRGBA, bg) {
     runnerUp: CODES[second],
     margin: (scores[second] - scores[best]) / denom,
     ranked: ranked.slice(0, 10),
+    scores: ranked.slice(0, 10).map(i => ({ code: CODES[i], score: scores[i] / denom })),
   };
 }
 
@@ -288,6 +320,19 @@ function renderResult(result) {
         Score: ${result.score.toFixed(1)} &middot;
         Margin to runner-up (${result.runnerUp.toUpperCase()}): ${result.margin.toFixed(1)}
       </p>
+      <details class="top-candidates">
+        <summary>Top 5 candidates (click to expand)</summary>
+        <ol>
+          ${result.scores.slice(0, 5).map(s => {
+            const m = COUNTRIES[s.code] || { name: s.code.toUpperCase() };
+            return `<li>
+              <img src="${FLAG_URL(s.code)}" alt="" style="height:18px;vertical-align:middle;margin-right:6px">
+              <b>${s.code.toUpperCase()}</b> ${m.name} — score ${s.score.toFixed(2)}
+            </li>`;
+          }).join("")}
+        </ol>
+        <p style="font-size:0.8em;opacity:0.7">Wrong answer? The crop may be off. Try a tighter screenshot of just the game canvas.</p>
+      </details>
     `;
   } else {
     renderHelperMode(result);
