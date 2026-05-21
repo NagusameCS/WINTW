@@ -109,7 +109,6 @@ async function init() {
     showLoading(`Loaded ${done}/${CODES.length} flags…`, 100 * done / CODES.length);
   }));
   hideLoading();
-  $("settings").classList.remove("hidden");
   $("game").classList.remove("hidden");
   setupSettingsUI();
   applyModeFromSettings();
@@ -117,6 +116,7 @@ async function init() {
   setupForm();
   setupBrowseModal();
   setupPvP();
+  setupMenu();
 }
 
 function showLoading(msg, pct) {
@@ -785,6 +785,26 @@ function setupBrowseModal() {
   $("browse-close").addEventListener("click", close);
   modal.querySelector(".modal-backdrop").addEventListener("click", close);
   search.addEventListener("input", render);
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape" && !modal.classList.contains("hidden")) close();
+  });
+}
+
+// ---------- settings menu (top-nav button) ----------
+
+function setupMenu() {
+  const btn = $("menu-btn");
+  const modal = $("settings-modal");
+  if (!btn || !modal) return;
+  function open(e) {
+    if (e) e.preventDefault();
+    modal.classList.remove("hidden");
+  }
+  function close() { modal.classList.add("hidden"); }
+  btn.addEventListener("click", open);
+  modal.querySelectorAll('[data-close="settings"]').forEach(el => {
+    el.addEventListener("click", close);
+  });
   document.addEventListener("keydown", e => {
     if (e.key === "Escape" && !modal.classList.contains("hidden")) close();
   });

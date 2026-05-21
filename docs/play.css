@@ -3,54 +3,41 @@
    monochrome aesthetic matching nagusamecs.github.io
    ============================================ */
 
-/* ===== SETTINGS ===== */
-#settings { padding: 0; }
-#settings details { border: 0; padding: 18px 22px; }
-#settings details > summary {
-  cursor: pointer;
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--text-secondary);
-  list-style: none;
-  user-select: none;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+/* ===== SETTINGS (in modal) ===== */
+.modal-content {
+  padding: 18px 20px;
+  overflow-y: auto;
 }
-#settings details > summary::-webkit-details-marker { display: none; }
-#settings details > summary::before {
-  content: "▸";
-  display: inline-block;
-  font-size: 0.7rem;
-  transition: transform var(--transition);
-}
-#settings details[open] > summary::before { transform: rotate(90deg); }
-#settings details > summary b {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
 .settings-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 14px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
+  gap: 18px;
 }
 .setting {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+}
+.setting > label:first-child b,
+.setting .setting-title {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 .setting label {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.85rem;
-  margin-top: 2px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
 }
+.setting input[type="checkbox"] + * { color: var(--text-primary); }
+.setting select,
+.setting input[type="number"] { width: 100%; }
 
 /* ===== GAME SHELL ===== */
 .game-shell {
@@ -92,54 +79,68 @@
 .pct-block.hidden-blind > #overlap-pct { visibility: hidden; }
 .pct-block.hidden-blind::after { content: "—"; color: var(--text-muted); }
 
-/* ===== GUESS FORM ===== */
+/* ===== GUESS FORM (Flagle-style autocomplete) ===== */
 #guess-form {
-  position: relative;
   display: flex;
   gap: 8px;
+  align-items: stretch;
 }
-#guess-form input {
+.input-wrap {
+  position: relative;
   flex: 1;
+}
+.input-wrap input {
+  width: 100%;
   font-size: 0.95rem;
+  padding: 11px 14px;
 }
 #browse-btn {
-  width: 38px;
+  width: 42px;
   padding: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  flex-shrink: 0;
 }
 
 .suggestions {
   position: absolute;
   top: calc(100% + 4px);
-  left: 0; right: 0;
+  left: 0;
+  right: 0;
   background: var(--bg-card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
-  box-shadow: var(--shadow);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
   max-height: 280px;
   overflow-y: auto;
-  z-index: 10;
+  z-index: 500;
 }
 .suggestions > div {
-  padding: 8px 12px;
+  padding: 9px 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
+  color: var(--text-primary);
   border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
 }
 .suggestions > div:last-child { border-bottom: 0; }
 .suggestions > div:hover,
 .suggestions > div.active {
-  background: var(--bg-tertiary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
 }
 .suggestions img {
-  width: 22px; height: 14px;
+  width: 24px;
+  height: 16px;
   object-fit: cover;
   border-radius: 2px;
   border: 1px solid var(--border);
+  flex-shrink: 0;
 }
+.suggestions > div:hover img,
+.suggestions > div.active img { border-color: transparent; }
 
 /* ===== GUESS LOG ===== */
 .guess-log {

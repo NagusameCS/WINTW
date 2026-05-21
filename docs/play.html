@@ -14,59 +14,17 @@
       <ul class="topnav-links">
         <li><a href="index.html">Solver</a></li>
         <li><a href="play.html" class="active">Play</a></li>
+        <li><a href="#" id="menu-btn" title="Settings">Menu</a></li>
         <li><a href="https://github.com/NagusameCS/WINTW" target="_blank" rel="noopener">Source</a></li>
       </ul>
     </div>
   </nav>
 
   <header>
-    <h1>Flagle <span class="tag-badge">true edition</span></h1>
-    <p class="tag">
-      Pixel-perfect 400&times;267 canvas, no clipping, no scaling tricks.
-      Same color rule as the original (<code>dist&lt;18</code>, both alphas&gt;0.5).
-    </p>
+    <h1>Flagle</h1>
   </header>
 
   <main>
-    <section id="settings" class="settings hidden">
-      <details open>
-        <summary><b>Settings &amp; modes</b></summary>
-        <div class="settings-grid">
-          <div class="setting">
-            <label for="mode-select"><b>Mode</b></label>
-            <select id="mode-select">
-              <option value="classic">Classic — 6 guesses</option>
-              <option value="hard">Hard — no thumbnails, no distance/bearing</option>
-              <option value="sudden">Sudden death — 1 guess</option>
-              <option value="marathon">Marathon — unlimited guesses</option>
-              <option value="blind">Blind — overlap % hidden</option>
-              <option value="continent">Continent lock — pick a region</option>
-              <option value="chained">Chained — last answer becomes next opener</option>
-              <option value="timed">Timed run — solve as many as you can</option>
-              <option value="pvp">Versus — same flag, race a friend</option>
-            </select>
-          </div>
-
-          <div class="setting" id="timed-wrap" hidden>
-            <label for="timed-seconds"><b>Time limit (seconds)</b></label>
-            <input id="timed-seconds" type="number" min="30" max="600" step="15" value="120">
-          </div>
-
-          <div class="setting" id="continent-wrap" hidden>
-            <label for="continent-select"><b>Continent</b></label>
-            <select id="continent-select"></select>
-          </div>
-
-          <div class="setting">
-            <label><input type="checkbox" id="opt-previews" checked> Show flag thumbnails in autocomplete &amp; log</label>
-            <label><input type="checkbox" id="opt-distance" checked> Show distance &amp; direction</label>
-            <label><input type="checkbox" id="opt-fade" checked> Fade animation on reveal</label>
-            <label><input type="checkbox" id="opt-pct" checked> Show overlap %</label>
-          </div>
-        </div>
-      </details>
-    </section>
-
     <section id="pvp-panel" class="pvp-panel hidden">
       <div class="pvp-controls">
         <button class="btn" id="pvp-host">Create room</button>
@@ -102,7 +60,7 @@
 
     <section id="chain-panel" class="chain-panel hidden">
       <span>Chain length: <b id="chain-len">0</b></span> &middot;
-      <span>Auto-opener (last solution) will be played as guess #1 each round.</span>
+      <span>Last solution becomes the auto-opener for the next round.</span>
     </section>
 
     <section id="game" class="game-shell hidden">
@@ -116,10 +74,12 @@
       </div>
 
       <form id="guess-form" autocomplete="off">
-        <input id="guess-input" type="text" placeholder="Type a country&hellip;" autocomplete="off" spellcheck="false">
+        <div class="input-wrap">
+          <input id="guess-input" type="text" placeholder="Guess a country&hellip;" autocomplete="off" spellcheck="false">
+          <div id="suggestions" class="suggestions hidden"></div>
+        </div>
         <button type="button" class="btn secondary" id="browse-btn" title="Browse full list">▾</button>
         <button type="submit" class="btn">Guess</button>
-        <div id="suggestions" class="suggestions hidden"></div>
       </form>
 
       <ol id="guess-log" class="guess-log"></ol>
@@ -137,13 +97,60 @@
     </section>
   </main>
 
+  <!-- Settings modal -->
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-backdrop" data-close="settings"></div>
+    <div class="modal-body">
+      <header class="modal-header">
+        <h3>Settings</h3>
+        <button class="btn secondary tiny" data-close="settings">Close</button>
+      </header>
+      <div class="modal-content">
+        <div class="settings-grid">
+          <div class="setting">
+            <label for="mode-select"><b>Mode</b></label>
+            <select id="mode-select">
+              <option value="classic">Classic — 6 guesses</option>
+              <option value="hard">Hard — no thumbnails, no distance/bearing</option>
+              <option value="sudden">Sudden death — 1 guess</option>
+              <option value="marathon">Marathon — unlimited guesses</option>
+              <option value="blind">Blind — overlap % hidden</option>
+              <option value="continent">Continent lock — pick a region</option>
+              <option value="chained">Chained — last answer becomes next opener</option>
+              <option value="timed">Timed run — solve as many as you can</option>
+              <option value="pvp">Versus — same flag, race a friend</option>
+            </select>
+          </div>
+
+          <div class="setting" id="timed-wrap" hidden>
+            <label for="timed-seconds"><b>Time limit (seconds)</b></label>
+            <input id="timed-seconds" type="number" min="30" max="600" step="15" value="120">
+          </div>
+
+          <div class="setting" id="continent-wrap" hidden>
+            <label for="continent-select"><b>Continent</b></label>
+            <select id="continent-select"></select>
+          </div>
+
+          <div class="setting">
+            <span class="setting-title">Display</span>
+            <label><input type="checkbox" id="opt-previews" checked> Flag thumbnails in autocomplete &amp; log</label>
+            <label><input type="checkbox" id="opt-distance" checked> Distance &amp; direction</label>
+            <label><input type="checkbox" id="opt-fade" checked> Fade animation on reveal</label>
+            <label><input type="checkbox" id="opt-pct" checked> Overlap %</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="browse-modal" class="modal hidden">
     <div class="modal-backdrop"></div>
     <div class="modal-body">
       <header class="modal-header">
         <h3>All countries</h3>
         <input id="browse-search" type="text" placeholder="Filter…" autocomplete="off">
-        <button class="btn secondary" id="browse-close">Close</button>
+        <button class="btn secondary tiny" id="browse-close">Close</button>
       </header>
       <div id="browse-list" class="browse-list"></div>
     </div>

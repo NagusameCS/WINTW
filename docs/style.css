@@ -213,7 +213,6 @@ progress::-moz-progress-bar { background: var(--text-primary); }
 #result,
 #loading,
 .loading,
-.settings details,
 .game-shell,
 .pvp-panel,
 .timed-panel,
