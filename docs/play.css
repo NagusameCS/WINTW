@@ -1,0 +1,147 @@
+.tag-badge {
+  display: inline-block;
+  background: #f5b942;
+  color: #0f1419;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-left: 6px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.game-shell {
+  background: #1a212b;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 16px;
+}
+
+.canvas-wrap {
+  position: relative;
+  background: #000;
+  border-radius: 8px;
+  /* enforce true 3:2 (400:267 = 1.4981) — no clipping, no stretching */
+  aspect-ratio: 400 / 267;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+#play-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* keep crisp pixels at any zoom */
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.status-row {
+  text-align: center;
+  margin: 16px 0 8px;
+  font-size: 16px;
+  color: #9aa6b2;
+}
+#overlap-pct {
+  font-weight: 700;
+  color: #f5b942;
+  font-size: 22px;
+}
+
+#guess-form {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+#guess-input {
+  flex: 1;
+  background: #2d3848;
+  color: #e6edf3;
+  border: 1px solid #3a4655;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 15px;
+}
+#guess-input:focus {
+  outline: none;
+  border-color: #f5b942;
+}
+
+.suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 90px;
+  background: #232c39;
+  border: 1px solid #3a4655;
+  border-radius: 6px;
+  margin-top: 4px;
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 10;
+}
+.suggestions div {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.suggestions div:hover, .suggestions div.active {
+  background: #3a4655;
+}
+.suggestions img {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.guess-log {
+  list-style: none;
+  margin: 16px auto 0;
+  padding: 0;
+  max-width: 520px;
+}
+.guess-log li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: #232c39;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+.guess-log img {
+  width: 32px;
+  height: 22px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+.guess-log .pct {
+  margin-left: auto;
+  color: #f5b942;
+  font-weight: 600;
+  font-family: ui-monospace, "SF Mono", monospace;
+}
+.guess-log .arrow {
+  font-size: 14px;
+  color: #9aa6b2;
+}
+
+.end-screen {
+  text-align: center;
+  margin-top: 24px;
+  padding: 24px;
+  border-radius: 8px;
+  background: #232c39;
+}
+.end-screen.win { border: 2px solid #43d17a; }
+.end-screen.lose { border: 2px solid #ff6b6b; }
+.end-screen h2 { margin-top: 0; }

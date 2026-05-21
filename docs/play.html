@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Flagle — true version</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="play.css">
+</head>
+<body>
+  <header>
+    <h1>Flagle <span class="tag-badge">true edition</span></h1>
+    <p class="tag">
+      Pixel-perfect 400&times;267 canvas, no clipping, no scaling tricks.
+      Same color rule as the original (<code>dist&lt;18</code>, both alphas&gt;0.5).
+      <a href="index.html">→ solver</a>
+    </p>
+  </header>
+
+  <main>
+    <section id="game" class="game-shell hidden">
+      <div class="canvas-wrap">
+        <canvas id="play-canvas" width="400" height="267"></canvas>
+        <div id="canvas-overlay"></div>
+      </div>
+
+      <div class="status-row">
+        <span id="overlap-pct">0%</span> revealed
+        &middot; guess <span id="guess-num">1</span> / <span id="guess-max">6</span>
+      </div>
+
+      <form id="guess-form" autocomplete="off">
+        <input id="guess-input" type="text" placeholder="Type a country&hellip;" autocomplete="off" spellcheck="false">
+        <button type="submit" class="btn">Guess</button>
+        <div id="suggestions" class="suggestions hidden"></div>
+      </form>
+
+      <ol id="guess-log" class="guess-log"></ol>
+
+      <div id="end-screen" class="end-screen hidden">
+        <h2 id="end-title"></h2>
+        <p id="end-body"></p>
+        <button class="btn" id="play-again">New flag</button>
+      </div>
+    </section>
+
+    <section id="loading" class="loading">
+      <p id="loading-msg">Loading flag database&hellip;</p>
+      <progress id="loading-bar" max="100" value="0"></progress>
+    </section>
+  </main>
+
+  <footer>
+    <p>True implementation of Flagle's rules. <a href="https://github.com/NagusameCS/WINTW" target="_blank" rel="noopener">source</a></p>
+  </footer>
+
+  <script src="play.js"></script>
+</body>
+</html>

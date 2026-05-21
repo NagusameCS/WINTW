@@ -42,7 +42,7 @@ def write_masks() -> list[str]:
 def fetch_country_meta(codes: list[str]) -> dict:
     """Hit restcountries.com once, build {code: {name, region, subregion}}."""
     import urllib.request
-    url = "https://restcountries.com/v3.1/all?fields=cca2,name,region,subregion"
+    url = "https://restcountries.com/v3.1/all?fields=cca2,name,region,subregion,latlng"
     print(f"fetching {url} ...")
     with urllib.request.urlopen(url, timeout=30) as r:
         data = json.loads(r.read())
@@ -51,11 +51,14 @@ def fetch_country_meta(codes: list[str]) -> dict:
         cc = entry.get("cca2", "").lower()
         if not cc:
             continue
+        ll = entry.get("latlng") or [None, None]
         by_code[cc] = {
             "name":      entry.get("name", {}).get("common", cc.upper()),
             "official":  entry.get("name", {}).get("official", ""),
             "region":    entry.get("region", "Other") or "Other",
             "subregion": entry.get("subregion", "") or "",
+            "lat":       ll[0] if len(ll) >= 2 else None,
+            "lng":       ll[1] if len(ll) >= 2 else None,
         }
     # Fill in any codes missing from restcountries with placeholders
     missing = [c for c in codes if c not in by_code]
@@ -63,7 +66,8 @@ def fetch_country_meta(codes: list[str]) -> dict:
         print(f"  WARN: {len(missing)} codes missing from restcountries: {missing}")
         for c in missing:
             by_code[c] = {"name": c.upper(), "official": "",
-                          "region": "Other", "subregion": ""}
+                          "region": "Other", "subregion": "",
+                          "lat": None, "lng": None}
     out = {c: by_code[c] for c in codes}
     (DOCS_DATA / "countries.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=0), encoding="utf-8")
