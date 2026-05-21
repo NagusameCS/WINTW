@@ -28,6 +28,29 @@ let MODE = "classic";
 let CONTINENT_LOCK = null;
 let CANDIDATE_POOL = [];         // codes eligible as solutions for current mode
 
+// chained mode
+let CHAIN_LEN = 0;
+let CHAIN_NEXT_OPENER = null;    // code to auto-play as guess #1 next round
+
+// timed mode
+let TIMER_END = 0;
+let TIMER_HANDLE = null;
+let TIMED_SOLVED = 0;
+let TIMED_SKIPPED = 0;
+
+// pvp
+let PVP = {
+  peer: null,
+  conn: null,
+  isHost: false,
+  roomId: null,
+  oppGuesses: 0,
+  oppPct: 0,
+  oppDone: null,           // null | "won" | "lost"
+  myDone: null,
+  pendingSolution: null,   // host: queued solution to start a round
+};
+
 // settings (persisted)
 const SETTINGS = {
   previews: true,
@@ -36,6 +59,7 @@ const SETTINGS = {
   pct: true,
   mode: "classic",
   continent: "Europe",
+  timed_seconds: 120,
 };
 
 function loadSettings() {
@@ -50,7 +74,7 @@ function saveSettings() {
 
 function modeMaxGuesses(mode) {
   if (mode === "sudden") return 1;
-  if (mode === "marathon") return Infinity;
+  if (mode === "marathon" || mode === "timed") return Infinity;
   return 6;
 }
 
@@ -92,6 +116,7 @@ async function init() {
   newGame();
   setupForm();
   setupBrowseModal();
+  setupPvP();
 }
 
 function showLoading(msg, pct) {
@@ -146,17 +171,36 @@ function setupSettingsUI() {
     saveSettings();
     if (MODE === "continent") { applyModeFromSettings(); newGame(); }
   });
+  $("timed-seconds").value = SETTINGS.timed_seconds;
+  $("timed-seconds").addEventListener("change", e => {
+    SETTINGS.timed_seconds = Math.max(15, Math.min(900, parseInt(e.target.value) || 120));
+    saveSettings();
+    if (MODE === "timed") { stopTimer(); newGame(); }
+  });
+  $("timed-skip").addEventListener("click", () => {
+    if (MODE === "timed" && SOLUTION_CODE) endGame(false);
+  });
 }
 
 function applyModeFromSettings() {
   MODE = SETTINGS.mode;
   $("continent-wrap").hidden = MODE !== "continent";
+  $("timed-wrap").hidden = MODE !== "timed";
   CONTINENT_LOCK = MODE === "continent" ? SETTINGS.continent : null;
   CANDIDATE_POOL = CODES.filter(c => {
     if (CONTINENT_LOCK) return (COUNTRIES[c] || {}).region === CONTINENT_LOCK;
     return true;
   });
   if (CANDIDATE_POOL.length === 0) CANDIDATE_POOL = CODES.slice();
+  // toggle visibility of mode-specific panels
+  $("chain-panel").classList.toggle("hidden", MODE !== "chained");
+  $("timed-panel").classList.toggle("hidden", MODE !== "timed");
+  $("pvp-panel").classList.toggle("hidden", MODE !== "pvp");
+  // reset mode-specific state when switching
+  if (MODE !== "chained") { CHAIN_LEN = 0; CHAIN_NEXT_OPENER = null; }
+  if (MODE !== "timed") { stopTimer(); TIMED_SOLVED = 0; TIMED_SKIPPED = 0; }
+  if (MODE !== "pvp") { pvpDisconnect(); }
+  $("chain-len").textContent = CHAIN_LEN;
   // update guess-max display
   const max = modeMaxGuesses(MODE);
   $("guess-max").textContent = max === Infinity ? "∞" : max;
@@ -166,8 +210,24 @@ function applyModeFromSettings() {
 
 // ---------- game state ----------
 
-function newGame() {
-  SOLUTION_CODE = CANDIDATE_POOL[Math.floor(Math.random() * CANDIDATE_POOL.length)];
+function newGame(forcedSolution) {
+  // PvP: only the host picks; guests wait for a `start` message
+  if (MODE === "pvp" && !forcedSolution) {
+    if (!PVP.isHost) {
+      // guest: clear board, wait
+      SOLUTION_CODE = null;
+      $("guess-input").disabled = true;
+      $("guess-input").placeholder = "Waiting for host to start round…";
+      return;
+    }
+    // host: pick and broadcast
+    forcedSolution = CANDIDATE_POOL[Math.floor(Math.random() * CANDIDATE_POOL.length)];
+    pvpSend({ type: "start", solution: forcedSolution });
+    PVP.oppGuesses = 0; PVP.oppPct = 0; PVP.oppDone = null; PVP.myDone = null;
+    updateOpponentUI();
+  }
+  SOLUTION_CODE = forcedSolution
+    || CANDIDATE_POOL[Math.floor(Math.random() * CANDIDATE_POOL.length)];
   SOLUTION_RGBA = FLAG_RGBA[SOLUTION_CODE];
   SOLUTION_ALPHA_COUNT = 0;
   for (let p = 0; p < P; p++) {
@@ -180,11 +240,20 @@ function newGame() {
   $("end-screen").classList.add("hidden");
   $("end-screen").classList.remove("win", "lose");
   $("guess-input").disabled = false;
+  $("guess-input").placeholder = "Type a country…";
   $("guess-input").value = "";
   $("guess-input").focus();
   updateGuessNum();
   drawCanvas(performance.now());
   updatePct();
+  // chained: auto-play the previous answer as guess #1
+  if (MODE === "chained" && CHAIN_NEXT_OPENER && CHAIN_NEXT_OPENER !== SOLUTION_CODE) {
+    submitGuess(CHAIN_NEXT_OPENER);
+  }
+  // timed: start/refresh timer on first newGame
+  if (MODE === "timed" && !TIMER_HANDLE) {
+    startTimer();
+  }
 }
 
 function computeRevealMask(guessRGBA) {
@@ -295,6 +364,7 @@ function distanceKm(fromCode, toCode) {
 
 function submitGuess(code) {
   if (!FLAG_RGBA[code]) return;
+  if (!SOLUTION_CODE) return;
   if (GUESSES.find(g => g.code === code)) return;
   const guessRGBA = FLAG_RGBA[code];
   const mask = computeRevealMask(guessRGBA);
@@ -313,8 +383,12 @@ function submitGuess(code) {
   GUESSES.push({ code, pct });
   scheduleDraw();
   appendGuessLog(code, pct);
-  updatePct();
+  const cumPct = updatePct();
   updateGuessNum();
+  // pvp: send progress to opponent
+  if (MODE === "pvp" && PVP.conn) {
+    pvpSend({ type: "progress", guesses: GUESSES.length, pct: cumPct });
+  }
   const max = modeMaxGuesses(MODE);
   if (code === SOLUTION_CODE) endGame(true);
   else if (max !== Infinity && GUESSES.length >= max) endGame(false);
@@ -363,18 +437,224 @@ function endGame(won) {
     }
   }
   scheduleDraw();
-  // After fade settles, show end screen — but show immediately too
   updatePct();
   const meta = COUNTRIES[SOLUTION_CODE] || { name: SOLUTION_CODE.toUpperCase() };
+
+  // chained: queue the just-finished solution as next opener
+  if (MODE === "chained") {
+    if (won) CHAIN_LEN += 1; else CHAIN_LEN = 0;
+    CHAIN_NEXT_OPENER = SOLUTION_CODE;
+    $("chain-len").textContent = CHAIN_LEN;
+  }
+
+  // timed: increment counters, auto-advance unless time is up
+  if (MODE === "timed") {
+    if (won) TIMED_SOLVED += 1; else TIMED_SKIPPED += 1;
+    $("timer-solved").textContent = TIMED_SOLVED;
+    $("timer-skipped").textContent = TIMED_SKIPPED;
+    if (Date.now() < TIMER_END) {
+      setTimeout(() => { if (MODE === "timed" && Date.now() < TIMER_END) newGame(); }, 800);
+      return;  // skip per-round end screen
+    }
+  }
+
+  // pvp: report finish
+  if (MODE === "pvp") {
+    PVP.myDone = won ? "won" : "lost";
+    if (PVP.conn) pvpSend({ type: "finished", won });
+  }
+
   const end = $("end-screen");
   end.classList.remove("hidden");
   end.classList.add(won ? "win" : "lose");
-  $("end-title").textContent = won ? "You got it!" : "Out of guesses";
-  $("end-body").innerHTML = `
+  let title = won ? "You got it!" : "Out of guesses";
+  let body = `
     The flag was <b>${meta.name}</b> (${SOLUTION_CODE.toUpperCase()})
     &middot; ${meta.region || ""}${meta.subregion ? " · " + meta.subregion : ""}
     ${MODE === "continent" ? ` · pool: ${CONTINENT_LOCK}` : ""}
   `;
+  if (MODE === "timed") {
+    title = "Time's up!";
+    body = `Solved <b>${TIMED_SOLVED}</b>, skipped <b>${TIMED_SKIPPED}</b> in ${SETTINGS.timed_seconds || 120}s.`;
+  } else if (MODE === "chained") {
+    body += `<br>Chain length: <b>${CHAIN_LEN}</b>. Next round will auto-open with <b>${(COUNTRIES[CHAIN_NEXT_OPENER] || {}).name || CHAIN_NEXT_OPENER}</b>.`;
+  } else if (MODE === "pvp") {
+    body += `<br>You: <b>${won ? "solved" : "out of guesses"}</b>` +
+      (PVP.oppDone ? ` &middot; Opponent: <b>${PVP.oppDone === "won" ? "solved" : "out"}</b>` : ` &middot; opponent still playing…`);
+    if (PVP.oppDone) {
+      const winner = pvpWinner();
+      title = winner === "you" ? "You win!" : winner === "opp" ? "Opponent wins" : "Tie";
+    }
+  }
+  $("end-title").textContent = title;
+  $("end-body").innerHTML = body;
+}
+
+// ---------- timed mode ----------
+
+function startTimer() {
+  TIMER_END = Date.now() + (SETTINGS.timed_seconds || 120) * 1000;
+  TIMED_SOLVED = 0; TIMED_SKIPPED = 0;
+  $("timer-solved").textContent = 0;
+  $("timer-skipped").textContent = 0;
+  tickTimer();
+  TIMER_HANDLE = setInterval(tickTimer, 250);
+}
+function stopTimer() {
+  if (TIMER_HANDLE) { clearInterval(TIMER_HANDLE); TIMER_HANDLE = null; }
+}
+function tickTimer() {
+  const left = Math.max(0, Math.ceil((TIMER_END - Date.now()) / 1000));
+  const el = $("timer-display");
+  if (el) {
+    el.textContent = left;
+    el.classList.toggle("warn", left <= 10);
+  }
+  if (left <= 0) {
+    stopTimer();
+    if (MODE === "timed" && $("end-screen").classList.contains("hidden")) endGame(false);
+  }
+}
+
+// ---------- pvp (PeerJS) ----------
+
+function genRoomId() {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s = "flagle-";
+  for (let i = 0; i < 5; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return s;
+}
+
+function pvpSend(msg) {
+  if (PVP.conn && PVP.conn.open) {
+    try { PVP.conn.send(msg); } catch (e) { console.warn("pvp send", e); }
+  }
+}
+
+function pvpStatus(text, cls) {
+  const el = $("pvp-status");
+  el.textContent = text;
+  el.classList.remove("connected", "error");
+  if (cls) el.classList.add(cls);
+}
+
+function pvpWireConn(conn) {
+  PVP.conn = conn;
+  conn.on("open", () => {
+    pvpStatus("connected", "connected");
+    $("opp-name").textContent = "ready";
+    if (PVP.isHost) $("pvp-start").hidden = false;
+  });
+  conn.on("data", msg => {
+    if (!msg || typeof msg !== "object") return;
+    if (msg.type === "start") {
+      PVP.oppGuesses = 0; PVP.oppPct = 0; PVP.oppDone = null; PVP.myDone = null;
+      updateOpponentUI();
+      newGame(msg.solution);
+    } else if (msg.type === "progress") {
+      PVP.oppGuesses = msg.guesses || 0;
+      PVP.oppPct = msg.pct || 0;
+      updateOpponentUI();
+    } else if (msg.type === "finished") {
+      PVP.oppDone = msg.won ? "won" : "lost";
+      updateOpponentUI();
+      if (PVP.myDone && !$("end-screen").classList.contains("hidden")) {
+        const winner = pvpWinner();
+        $("end-title").textContent = winner === "you" ? "You win!" : winner === "opp" ? "Opponent wins" : "Tie";
+      }
+    }
+  });
+  conn.on("close", () => {
+    pvpStatus("opponent left", "error");
+    $("opp-name").textContent = "(disconnected)";
+    PVP.conn = null;
+  });
+  conn.on("error", e => {
+    console.warn("pvp conn error", e);
+    pvpStatus("connection error", "error");
+  });
+}
+
+function pvpWinner() {
+  if (PVP.myDone === "won" && PVP.oppDone !== "won") return "you";
+  if (PVP.oppDone === "won" && PVP.myDone !== "won") return "opp";
+  return "tie";
+}
+
+function updateOpponentUI() {
+  $("opp-guesses").textContent = PVP.oppGuesses;
+  $("opp-pct").textContent = (PVP.oppPct || 0).toFixed(1) + "%";
+  const r = $("opp-result");
+  r.classList.remove("won", "lost");
+  if (PVP.oppDone === "won") { r.textContent = "✓ solved"; r.classList.add("won"); }
+  else if (PVP.oppDone === "lost") { r.textContent = "✗ out"; r.classList.add("lost"); }
+  else { r.textContent = ""; }
+}
+
+function pvpHost() {
+  pvpDisconnect();
+  PVP.isHost = true;
+  PVP.roomId = genRoomId();
+  pvpStatus("opening room…");
+  PVP.peer = new Peer(PVP.roomId);
+  PVP.peer.on("open", id => {
+    pvpStatus(`waiting for opponent (room: ${id})`);
+    $("pvp-room").classList.remove("hidden");
+    $("pvp-code").textContent = id;
+  });
+  PVP.peer.on("connection", conn => pvpWireConn(conn));
+  PVP.peer.on("error", e => pvpStatus("error: " + e.type, "error"));
+}
+
+function pvpJoin(roomId) {
+  pvpDisconnect();
+  PVP.isHost = false;
+  PVP.roomId = roomId;
+  pvpStatus("connecting…");
+  PVP.peer = new Peer();
+  PVP.peer.on("open", () => {
+    const conn = PVP.peer.connect(roomId, { reliable: true });
+    pvpWireConn(conn);
+    $("pvp-room").classList.remove("hidden");
+    $("pvp-code").textContent = roomId;
+  });
+  PVP.peer.on("error", e => pvpStatus("error: " + e.type, "error"));
+}
+
+function pvpDisconnect() {
+  try { if (PVP.conn) PVP.conn.close(); } catch {}
+  try { if (PVP.peer) PVP.peer.destroy(); } catch {}
+  PVP.conn = null; PVP.peer = null; PVP.isHost = false; PVP.roomId = null;
+  PVP.oppGuesses = 0; PVP.oppPct = 0; PVP.oppDone = null; PVP.myDone = null;
+  $("pvp-room").classList.add("hidden");
+  $("pvp-start").hidden = true;
+  pvpStatus("not connected");
+}
+
+function setupPvP() {
+  if (typeof Peer === "undefined") {
+    pvpStatus("PeerJS unavailable (offline?)", "error");
+  }
+  $("pvp-host").addEventListener("click", () => pvpHost());
+  $("pvp-join").addEventListener("click", () => {
+    const id = prompt("Enter room code:")?.trim();
+    if (id) pvpJoin(id);
+  });
+  $("pvp-copy").addEventListener("click", () => {
+    if (!PVP.roomId) return;
+    const url = `${location.origin}${location.pathname}?room=${encodeURIComponent(PVP.roomId)}`;
+    navigator.clipboard?.writeText(url);
+    pvpStatus("link copied");
+  });
+  $("pvp-leave").addEventListener("click", () => pvpDisconnect());
+  $("pvp-start").addEventListener("click", () => { if (PVP.isHost) newGame(); });
+  // auto-join from ?room= query param
+  const params = new URLSearchParams(location.search);
+  const room = params.get("room");
+  if (room) {
+    SETTINGS.mode = "pvp"; saveSettings();
+    setTimeout(() => pvpJoin(room), 100);
+  }
 }
 
 // ---------- input form + autocomplete ----------

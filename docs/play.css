@@ -268,3 +268,71 @@
   cursor: not-allowed;
 }
 .browse-list .country-row.no-thumb img { display: none; }
+
+/* timed / chain / pvp panels */
+.timed-panel, .chain-panel, .pvp-panel {
+  background: #1a212b;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.big-stat {
+  font-size: 28px;
+  font-weight: 700;
+  color: #f5b942;
+  font-variant-numeric: tabular-nums;
+}
+.big-stat.warn { color: #ff6b6b; }
+
+.pvp-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.pvp-status {
+  font-size: 13px;
+  color: #9aa6b2;
+}
+.pvp-status.connected { color: #43d17a; }
+.pvp-status.error { color: #ff6b6b; }
+.pvp-room {
+  width: 100%;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.pvp-room code {
+  background: #2d3848;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: ui-monospace, "SF Mono", monospace;
+  user-select: all;
+}
+.opponent {
+  background: #232c39;
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.opponent h4 {
+  margin: 0 0 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #9aa6b2;
+}
+.opponent-stats {
+  font-size: 14px;
+}
+#opp-result {
+  margin-left: 8px;
+  font-weight: 600;
+}
+#opp-result.won { color: #43d17a; }
+#opp-result.lost { color: #ff6b6b; }

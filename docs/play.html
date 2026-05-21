@@ -31,7 +31,15 @@
               <option value="marathon">Marathon — unlimited guesses</option>
               <option value="blind">Blind — overlap % hidden</option>
               <option value="continent">Continent lock — pick a region</option>
+              <option value="chained">Chained — last answer becomes next opener</option>
+              <option value="timed">Timed run — solve as many as you can</option>
+              <option value="pvp">Versus — same flag, race a friend</option>
             </select>
+          </div>
+
+          <div class="setting" id="timed-wrap" hidden>
+            <label for="timed-seconds"><b>Time limit (seconds)</b></label>
+            <input id="timed-seconds" type="number" min="30" max="600" step="15" value="120">
           </div>
 
           <div class="setting" id="continent-wrap" hidden>
@@ -47,6 +55,44 @@
           </div>
         </div>
       </details>
+    </section>
+
+    <section id="pvp-panel" class="pvp-panel hidden">
+      <div class="pvp-controls">
+        <button class="btn" id="pvp-host">Create room</button>
+        <button class="btn secondary" id="pvp-join">Join room…</button>
+        <span id="pvp-status" class="pvp-status">not connected</span>
+      </div>
+      <div id="pvp-room" class="pvp-room hidden">
+        <div>Room code: <code id="pvp-code"></code>
+          <button class="btn secondary" id="pvp-copy">Copy link</button>
+          <button class="btn secondary" id="pvp-leave">Leave</button>
+        </div>
+        <div class="opponent" id="opponent-box">
+          <h4>Opponent</h4>
+          <div class="opponent-stats">
+            <span id="opp-name">waiting…</span> &middot;
+            guess <span id="opp-guesses">0</span> &middot;
+            <span id="opp-pct">0%</span> revealed
+            <span id="opp-result"></span>
+          </div>
+        </div>
+        <button class="btn" id="pvp-start" hidden>Start round</button>
+      </div>
+    </section>
+
+    <section id="timed-panel" class="timed-panel hidden">
+      <div>
+        <span class="big-stat" id="timer-display">--</span> seconds left
+        &middot; solved <span id="timer-solved">0</span>
+        &middot; skipped <span id="timer-skipped">0</span>
+      </div>
+      <button class="btn secondary" id="timed-skip">Skip flag</button>
+    </section>
+
+    <section id="chain-panel" class="chain-panel hidden">
+      <span>Chain length: <b id="chain-len">0</b></span> &middot;
+      <span>Auto-opener (last solution) will be played as guess #1 each round.</span>
     </section>
 
     <section id="game" class="game-shell hidden">
@@ -97,6 +143,7 @@
     <p>True implementation of Flagle's rules. <a href="https://github.com/NagusameCS/WINTW" target="_blank" rel="noopener">source</a></p>
   </footer>
 
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <script src="play.js"></script>
 </body>
 </html>
