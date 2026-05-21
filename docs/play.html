@@ -18,19 +18,50 @@
   </header>
 
   <main>
+    <section id="settings" class="settings hidden">
+      <details open>
+        <summary><b>Settings &amp; modes</b></summary>
+        <div class="settings-grid">
+          <div class="setting">
+            <label for="mode-select"><b>Mode</b></label>
+            <select id="mode-select">
+              <option value="classic">Classic — 6 guesses</option>
+              <option value="hard">Hard — no thumbnails, no distance/bearing</option>
+              <option value="sudden">Sudden death — 1 guess</option>
+              <option value="marathon">Marathon — unlimited guesses</option>
+              <option value="blind">Blind — overlap % hidden</option>
+              <option value="continent">Continent lock — pick a region</option>
+            </select>
+          </div>
+
+          <div class="setting" id="continent-wrap" hidden>
+            <label for="continent-select"><b>Continent</b></label>
+            <select id="continent-select"></select>
+          </div>
+
+          <div class="setting">
+            <label><input type="checkbox" id="opt-previews" checked> Show flag thumbnails in autocomplete &amp; log</label>
+            <label><input type="checkbox" id="opt-distance" checked> Show distance &amp; direction</label>
+            <label><input type="checkbox" id="opt-fade" checked> Fade animation on reveal</label>
+            <label><input type="checkbox" id="opt-pct" checked> Show overlap %</label>
+          </div>
+        </div>
+      </details>
+    </section>
+
     <section id="game" class="game-shell hidden">
       <div class="canvas-wrap">
         <canvas id="play-canvas" width="400" height="267"></canvas>
-        <div id="canvas-overlay"></div>
       </div>
 
       <div class="status-row">
-        <span id="overlap-pct">0%</span> revealed
+        <span class="pct-block"><span id="overlap-pct">0%</span> revealed</span>
         &middot; guess <span id="guess-num">1</span> / <span id="guess-max">6</span>
       </div>
 
       <form id="guess-form" autocomplete="off">
         <input id="guess-input" type="text" placeholder="Type a country&hellip;" autocomplete="off" spellcheck="false">
+        <button type="button" class="btn secondary" id="browse-btn" title="Browse full list">▾</button>
         <button type="submit" class="btn">Guess</button>
         <div id="suggestions" class="suggestions hidden"></div>
       </form>
@@ -49,6 +80,18 @@
       <progress id="loading-bar" max="100" value="0"></progress>
     </section>
   </main>
+
+  <div id="browse-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-body">
+      <header class="modal-header">
+        <h3>All countries</h3>
+        <input id="browse-search" type="text" placeholder="Filter…" autocomplete="off">
+        <button class="btn secondary" id="browse-close">Close</button>
+      </header>
+      <div id="browse-list" class="browse-list"></div>
+    </div>
+  </div>
 
   <footer>
     <p>True implementation of Flagle's rules. <a href="https://github.com/NagusameCS/WINTW" target="_blank" rel="noopener">source</a></p>
